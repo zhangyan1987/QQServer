@@ -15,8 +15,9 @@ public class QQServer {
 			System.out.println("QQ Server starting..........");
 			ssocket = new ServerSocket(port);
 			Socket asocket = null;
-			while ((asocket = ssocket.accept()) != null) {
-				(new Thread(new MsgDispatcherThread(asocket))).start();
+			while ((asocket = ssocket.accept()) !=null) {
+				System.out.println("client connected");
+				(new MsgDispatcherThread(asocket)).run();
 				
 			}
 		} catch (IOException e) {

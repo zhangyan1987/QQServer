@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class MsgDispatcherThread implements Runnable {
+public class MsgDispatcherThread  {
 
 	private Socket asocket;
 	
@@ -26,19 +26,23 @@ public class MsgDispatcherThread implements Runnable {
 		this.asocket =  asocket;
 	}
 	
-	@Override
 	public void run() {
-		InputStream is;
-		OutputStream os;
+		InputStream is = null;
+		OutputStream os = null;
+		InputStreamReader isr = null;
+		BufferedReader br = null;
+		OutputStreamWriter osw = null;
+		BufferedWriter bw = null;
+		
 		try {
 			is = asocket.getInputStream();
 			os = asocket.getOutputStream();
 			
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			
-			OutputStreamWriter osw = new OutputStreamWriter(os);
-			BufferedWriter bw = new BufferedWriter(osw);
+			isr = new InputStreamReader(is);
+			br = new BufferedReader(isr);
+
+			osw = new OutputStreamWriter(os);
+			bw = new BufferedWriter(osw);
 			
 			String line = null;
 			line = br.readLine();//receive useinfo
@@ -50,11 +54,9 @@ public class MsgDispatcherThread implements Runnable {
 			while((line = br.readLine()) != null) {
 				msg.append(line);
 			}
-			br.close();
-			isr.close();
-			is.close();
+			//br.close();
 			
-			//receive from client
+			
 			Map<String,String>  toMsgMap = msgMap.get(fromNum);
 			if(toMsgMap == null) {
 				toMsgMap = new HashMap<String,String>();
@@ -71,22 +73,62 @@ public class MsgDispatcherThread implements Runnable {
 			
 			
 			//response to client
-			Map<String,String>  sendMap = msgMap2.get(fromNum);
-			StringBuilder sendMsg = new StringBuilder();
-			Iterator<String> it = sendMap.keySet().iterator();
-			while(it.hasNext()) {
-				String from = it.next();
-				sendMsg.append(from).append("::").append(fromNum).append("\n");
-				sendMsg.append(sendMap.get(from));
+			Map<String,String>  sendMap = msgMap2.get(fromNum); 
+			if(sendMap != null) {
+				StringBuilder sendMsg = new StringBuilder();
+				Iterator<String> it = sendMap.keySet().iterator();
+				while(it.hasNext()) {
+					String from = it.next();
+					sendMsg.append(from).append("::").append(fromNum).append("\n");
+					sendMsg.append(sendMap.get(from));
+				}
+	 			//bw.write(sendMsg.toString());
+				
 			}
- 			bw.write(sendMsg.toString());
-			bw.close();
-			osw.close();
-			asocket.close();
+			bw.write("welcone to QQ");
+ 			bw.flush();
+ 			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		finally {
+			
+			/*try {
+				if(br != null) {
+					br.close();
+					br = null;
+				}
+					
+				
+				if(isr != null) {
+					isr.close();
+					isr = null;
+				}
+					
+				
+				
+				if(is != null) {
+					is.close();
+					is =null;
+				}
+					
+				
+				if(bw != null) {
+					bw.close();
+					bw = null;
+				}
+					
+				if(osw != null) {
+					osw.close();
+					osw = null;
+				}
+				*/	
+
+				//asocket.close();
+		}
+			
+		
 		
 	}
 
