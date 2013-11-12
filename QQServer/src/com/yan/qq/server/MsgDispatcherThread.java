@@ -41,8 +41,8 @@ public class MsgDispatcherThread  {
 			isr = new InputStreamReader(is);
 			br = new BufferedReader(isr);
 
-			osw = new OutputStreamWriter(os);
-			bw = new BufferedWriter(osw);
+			osw = new OutputStreamWriter(os);//should not use
+			bw = new BufferedWriter(osw);//shoulde not use
 			
 			String line = null;
 			line = br.readLine();//receive useinfo
@@ -85,8 +85,8 @@ public class MsgDispatcherThread  {
 	 			//bw.write(sendMsg.toString());
 				
 			}
-			bw.write("welcone to QQ");
- 			bw.flush();
+			bw.write("welcone to QQ");//should not use
+ 			bw.flush();//should not use
  			
 			
 		} catch (IOException e) {
